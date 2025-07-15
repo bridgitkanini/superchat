@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/auth";
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+
+firebase.initializeApp({
+  apiKey: "AIzaSyCv6QvaxzCw53Qu2egUPdMpAO2Nmb6MIpE",
+  authDomain: "superchat-ea9dd.firebaseapp.com",
+  projectId: "superchat-ea9dd",
+  storageBucket: "superchat-ea9dd.firebasestorage.app",
+  messagingSenderId: "916381874487",
+  appId: "1:916381874487:web:2a51f79b3cab96c25cc2b2",
+  measurementId: "G-DGSN3K7ZH4",
+});
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+
+const [user] = useAuthState(auth);
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <section>{user ? <ChatRoom /> : <SignIn />}</section>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+function SignIn() {
+  return (
+    <>
+      <button>
+        Sign in with Google
+      </button>
+    </>
+  );
+}
+
+function ChatRoom() {
+  return <></>;
+}
+
+export default App;
