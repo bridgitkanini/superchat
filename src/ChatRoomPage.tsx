@@ -67,7 +67,7 @@ export function ChatRoomPage({
             value={formValue}
             onChange={(e) => setFormValue(e.target.value)}
             placeholder="Type your message…"
-            className="flex-1 bg-white"
+            className="flex-1 bg-white text-black"
           />
           <Button
             type="submit"
