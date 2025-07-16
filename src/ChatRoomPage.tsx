@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Button } from "./components/ui/button";
 import { Card } from "./components/ui/card";
 import { Input } from "./components/ui/input";
-import { LogOut } from "lucide-react";
+import { LogOut, Send } from "lucide-react";
 import type { Auth } from "firebase/auth";
 import type { Firestore } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -30,7 +30,8 @@ export function ChatRoomPage({
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth.currentUser) return;
+    if (!auth.currentUser || !formValue.trim()) return;
+
     const { uid, photoURL } = auth.currentUser;
     await addDoc(messagesRef, {
       text: formValue,
@@ -39,66 +40,88 @@ export function ChatRoomPage({
       photoURL,
     });
     setFormValue("");
-    if (dummy.current) dummy.current.scrollIntoView({ behavior: "smooth" });
+
+    // Scroll to bottom after message is sent
+    setTimeout(() => {
+      if (dummy.current) {
+        dummy.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
   };
 
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (dummy.current) {
+      dummy.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center p-4">
-      <Card className="w-full max-w-xl h-[80vh] flex flex-col shadow-lg rounded-3xl bg-white">
-        <Header auth={auth} />
-        <main className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
-          {messages &&
-            messages.map((msg) => (
-              <ChatMessage
-                key={msg.id}
-                message={
-                  msg as { text: string; uid: string; photoURL?: string }
-                }
-                isOwn={!!auth.currentUser && msg.uid === auth.currentUser.uid}
-              />
-            ))}
-          <div ref={dummy}></div>
-        </main>
-        <form
-          onSubmit={sendMessage}
-          className="flex items-center gap-2 border-t px-4 py-3 bg-[#f7f9fa] rounded-b-3xl"
-        >
-          <Input
-            value={formValue}
-            onChange={(e) => setFormValue(e.target.value)}
-            placeholder="Type your message…"
-            className="flex-1 bg-white text-black"
-          />
-          <Button
-            type="submit"
-            className="bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900 font-bold shadow"
-            disabled={!formValue.trim()}
+    <div className="min-h-screen w-full bg-[#f7f9fa] p-2 sm:p-4 lg:p-6">
+      <div className="max-w-4xl mx-auto h-[calc(100vh-1rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]">
+        <Card className="h-full flex flex-col shadow-lg rounded-xl sm:rounded-2xl lg:rounded-3xl bg-white overflow-hidden">
+          <Header auth={auth} />
+
+          {/* Messages Container */}
+          <main className="flex-1 overflow-y-auto px-3 sm:px-4 lg:px-6 py-2 sm:py-3 lg:py-4 space-y-2 sm:space-y-3">
+            {messages &&
+              messages.map((msg) => (
+                <ChatMessage
+                  key={msg.id}
+                  message={
+                    msg as { text: string; uid: string; photoURL?: string }
+                  }
+                  isOwn={!!auth.currentUser && msg.uid === auth.currentUser.uid}
+                />
+              ))}
+            <div ref={dummy}></div>
+          </main>
+
+          {/* Message Input */}
+          <form
+            onSubmit={sendMessage}
+            className="flex items-center gap-2 sm:gap-3 border-t px-3 sm:px-4 lg:px-6 py-3 sm:py-4 bg-[#f7f9fa] rounded-b-xl sm:rounded-b-2xl lg:rounded-b-3xl"
           >
-            <span role="img" aria-label="Send">
-              📤
-            </span>
-          </Button>
-        </form>
-      </Card>
+            <Input
+              value={formValue}
+              onChange={(e) => setFormValue(e.target.value)}
+              placeholder="Type your message…"
+              className="flex-1 bg-white text-black text-sm sm:text-base py-2 sm:py-3"
+              maxLength={500}
+            />
+            <Button
+              type="submit"
+              size="sm"
+              className="bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900 font-bold shadow p-2 sm:p-3 rounded-lg"
+              disabled={!formValue.trim()}
+            >
+              <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="sr-only">Send message</span>
+            </Button>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }
 
 function Header({ auth }: { auth: Auth }) {
   return (
-    <header className="flex items-center justify-between px-6 py-4 border-b bg-white rounded-t-3xl">
-      <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-        <span className="rounded-full bg-gradient-to-br from-[#ccf49c] to-[#c8def0] px-3 py-1 text-green-900 shadow">
+    <header className="flex items-center justify-between px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b bg-white rounded-t-xl sm:rounded-t-2xl lg:rounded-t-3xl">
+      <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <span className="rounded-full bg-gradient-to-br from-[#ccf49c] to-[#c8def0] px-2 sm:px-3 py-1 text-green-900 shadow text-sm sm:text-base lg:text-lg">
           SuperChat
         </span>
       </h1>
       <Button
         variant="outline"
-        className="flex items-center gap-2"
+        size="sm"
+        className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2"
         onClick={() => auth.signOut()}
       >
-        <LogOut className="w-4 h-4" />
-        Sign Out
+        <LogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+        <span className="hidden sm:inline">Sign Out</span>
+        <span className="sm:hidden">Sign Out</span>
       </Button>
     </header>
   );
@@ -121,15 +144,16 @@ function ChatMessage({
         <img
           src={message.photoURL}
           alt="avatar"
-          className="w-8 h-8 rounded-full object-cover border"
+          className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border flex-shrink-0"
         />
       )}
       <div
-        className={`px-4 py-2 rounded-2xl shadow-sm text-base max-w-xs break-words ${
+        className={`px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl shadow-sm text-sm sm:text-base break-words ${
           isOwn
-            ? "bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900"
-            : "bg-gray-100 text-gray-800"
+            ? "bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900 max-w-[70%] sm:max-w-xs"
+            : "bg-gray-100 text-gray-800 max-w-[70%] sm:max-w-xs"
         }`}
+        style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
       >
         {message.text}
       </div>
@@ -137,7 +161,7 @@ function ChatMessage({
         <img
           src={message.photoURL}
           alt="avatar"
-          className="w-8 h-8 rounded-full object-cover border"
+          className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border flex-shrink-0"
         />
       )}
     </div>
