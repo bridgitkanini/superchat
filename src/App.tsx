@@ -1,14 +1,24 @@
 import { useRef, useState } from "react";
 import "./App.css";
 
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
-firebase.initializeApp({
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
+const firebaseConfig = {
   apiKey: "AIzaSyCv6QvaxzCw53Qu2egUPdMpAO2Nmb6MIpE",
   authDomain: "superchat-ea9dd.firebaseapp.com",
   projectId: "superchat-ea9dd",
@@ -16,27 +26,25 @@ firebase.initializeApp({
   messagingSenderId: "916381874487",
   appId: "1:916381874487:web:2a51f79b3cab96c25cc2b2",
   measurementId: "G-DGSN3K7ZH4",
-});
-
-const auth = firebase.auth();
-const firestore = firebase.firestore();
-
-const [user] = useAuthState(auth);
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const firestore = getFirestore(app);
 
 function App() {
+  const [user] = useAuthState(auth);
+
   return (
-    <>
-      <div>
-        <section>{user ? <ChatRoom /> : <SignIn />}</section>
-      </div>
-    </>
+    <div>
+      <section>{user ? <ChatRoom /> : <SignIn />}</section>
+    </div>
   );
 }
 
 function SignIn() {
   const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.sighInWithPopup(provider);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider);
   };
 
   return (
@@ -57,41 +65,48 @@ function SignOut() {
 }
 
 function ChatRoom() {
-  const dummy = useRef();
+  const dummy = useRef<HTMLDivElement | null>(null);
 
-  const messagesRef = firestore.collection("messages");
-  const query = messagesRef.orderBy("createdAt").limit(25);
+  const messagesRef = collection(firestore, "messages");
+  const messagesQuery = query(messagesRef, orderBy("createdAt"), limit(25));
 
-  const [messages] = useCollectionData(query, { idField: "id" });
+  const [messages] = useCollectionData(messagesQuery);
 
   const [formValue, setFormValue] = useState("");
 
-  const sendMessage = async (e) => {
+  const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!auth.currentUser) return;
     const { uid, photoURL } = auth.currentUser;
 
-    await messagesRef.add({
+    await addDoc(messagesRef, {
       text: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdAt: serverTimestamp(),
       uid,
       photoURL,
     });
 
     setFormValue("");
 
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+    if (dummy.current) {
+      dummy.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
     <>
       <main>
+        <SignOut />
         {messages &&
-          messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
-
+          messages.map((msg) => (
+            <ChatMessage
+              key={msg.id}
+              message={msg as ChatMessageProps["message"]}
+            />
+          ))}
         <div ref={dummy}></div>
       </main>
-
       <form onSubmit={sendMessage}>
         <input
           value={formValue}
@@ -99,20 +114,29 @@ function ChatRoom() {
         />
         <button type="submit">📤</button>
       </form>
-
       <div></div>
     </>
   );
 }
 
-function ChatMessage(props) {
-  const { text, uid } = props.message;
+type ChatMessageProps = {
+  message: {
+    id?: string;
+    text: string;
+    uid: string;
+    photoURL?: string;
+  };
+};
 
-  const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
+function ChatMessage(props: ChatMessageProps) {
+  const { text, uid, photoURL } = props.message;
+
+  const messageClass =
+    auth.currentUser && uid === auth.currentUser.uid ? "sent" : "received";
 
   return (
     <div className={`message ${messageClass}`}>
-      <img src={photoURL} />
+      {photoURL && <img src={photoURL} alt="avatar" />}
       <p>{text}</p>
     </div>
   );
