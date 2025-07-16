@@ -7,9 +7,10 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
+import { setGlobalOptions } from "firebase-functions";
+import { onRequest } from "firebase-functions/https";
 import * as logger from "firebase-functions/logger";
+import { initializeApp } from "firebase/app";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -30,3 +31,30 @@ setGlobalOptions({ maxInstances: 10 });
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+const functions = require("firebase-functions");
+const Filter = require("bad-words");
+
+const admin = require("firebase-admin");
+admin.initializeApp();
+
+const db = admin.firestore();
+
+exports.detectEvilUsers = functions.firestore
+  .document("messages/{msgId}")
+  .onCreate(async (doc, ctx) => {
+    const filter = new Filter();
+    const { text, uid } = doc.data();
+
+    if (filter.isProfane(text)) {
+
+        const cleaned = filter.clean(text);
+        await doc.ref.update({text: `🤐 I got banned for saying... ${cleaned}`});
+
+        await db.collection("banned").doc(uid).set({});
+    }
+
+
+
+
+  });
