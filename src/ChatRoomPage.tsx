@@ -43,45 +43,43 @@ export function ChatRoomPage({
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#f7f9fa] flex items-center justify-center">
-      <div className="flex w-full h-full items-center justify-center">
-        <Card className="w-full max-w-xl min-h-[70vh] flex flex-col shadow-lg rounded-3xl bg-white mx-auto my-auto">
-          <Header auth={auth} />
-          <main className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
-            {messages &&
-              messages.map((msg) => (
-                <ChatMessage
-                  key={msg.id}
-                  message={
-                    msg as { text: string; uid: string; photoURL?: string }
-                  }
-                  isOwn={!!auth.currentUser && msg.uid === auth.currentUser.uid}
-                />
-              ))}
-            <div ref={dummy}></div>
-          </main>
-          <form
-            onSubmit={sendMessage}
-            className="flex items-center gap-2 border-t px-4 py-3 bg-[#f7f9fa] rounded-b-3xl"
+    <div className="fixed inset-0 flex items-center justify-center p-4">
+      <Card className="w-full max-w-xl h-[80vh] flex flex-col shadow-lg rounded-3xl bg-white">
+        <Header auth={auth} />
+        <main className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+          {messages &&
+            messages.map((msg) => (
+              <ChatMessage
+                key={msg.id}
+                message={
+                  msg as { text: string; uid: string; photoURL?: string }
+                }
+                isOwn={!!auth.currentUser && msg.uid === auth.currentUser.uid}
+              />
+            ))}
+          <div ref={dummy}></div>
+        </main>
+        <form
+          onSubmit={sendMessage}
+          className="flex items-center gap-2 border-t px-4 py-3 bg-[#f7f9fa] rounded-b-3xl"
+        >
+          <Input
+            value={formValue}
+            onChange={(e) => setFormValue(e.target.value)}
+            placeholder="Type your message…"
+            className="flex-1 bg-white"
+          />
+          <Button
+            type="submit"
+            className="bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900 font-bold shadow"
+            disabled={!formValue.trim()}
           >
-            <Input
-              value={formValue}
-              onChange={(e) => setFormValue(e.target.value)}
-              placeholder="Type your message…"
-              className="flex-1 bg-white"
-            />
-            <Button
-              type="submit"
-              className="bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900 font-bold shadow"
-              disabled={!formValue.trim()}
-            >
-              <span role="img" aria-label="Send">
-                📤
-              </span>
-            </Button>
-          </form>
-        </Card>
-      </div>
+            <span role="img" aria-label="Send">
+              📤
+            </span>
+          </Button>
+        </form>
+      </Card>
     </div>
   );
 }
