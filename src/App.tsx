@@ -18,6 +18,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
+import type { User } from "firebase/auth";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCv6QvaxzCw53Qu2egUPdMpAO2Nmb6MIpE",
   authDomain: "superchat-ea9dd.firebaseapp.com",
@@ -35,9 +37,23 @@ function App() {
   const [user] = useAuthState(auth);
 
   return (
-    <div>
-      <section>{user ? <ChatRoom /> : <SignIn />}</section>
+    <div className="app-bg">
+      <div className="chat-container">
+        <Header user={user ?? null} />
+        <section className="main-section">
+          {user ? <ChatRoom /> : <SignIn />}
+        </section>
+      </div>
     </div>
+  );
+}
+
+function Header({ user }: { user: User | null }) {
+  return (
+    <header className="app-header">
+      <h1>💬 SuperChat</h1>
+      {user && <SignOut />}
+    </header>
   );
 }
 
@@ -48,18 +64,25 @@ function SignIn() {
   };
 
   return (
-    <>
-      <button onClick={signInWithGoogle}>Sign in with Google</button>
-    </>
+    <div className="sign-in-container">
+      <button className="sign-in-btn" onClick={signInWithGoogle}>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+          alt="Google"
+          className="google-icon"
+        />
+        Sign in with Google
+      </button>
+    </div>
   );
 }
 
 function SignOut() {
   return (
     auth.currentUser && (
-      <>
-        <button onClick={() => auth.signOut()}>Sign Out</button>
-      </>
+      <button className="sign-out-btn" onClick={() => auth.signOut()}>
+        Sign Out
+      </button>
     )
   );
 }
@@ -97,7 +120,6 @@ function ChatRoom() {
   return (
     <>
       <main>
-        <SignOut />
         {messages &&
           messages.map((msg) => (
             <ChatMessage
@@ -114,7 +136,6 @@ function ChatRoom() {
         />
         <button type="submit">📤</button>
       </form>
-      <div></div>
     </>
   );
 }
