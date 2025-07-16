@@ -7,7 +7,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full bg-[#f7f9fa] flex flex-col">
+    <div className="min-h-screen w-full bg-[#f7f9fa] flex flex-col sm:mx-16">
       {/* Navigation */}
       <nav className="w-full flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 relative">
         {/* Logo */}
@@ -15,9 +15,9 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
           <span className="rounded-full bg-gradient-to-br from-[#ccf49c] to-[#c8def0] px-3 py-1 font-bold text-lg text-green-900 shadow">
             SuperChat
           </span>
-          <Button variant="ghost" className="hidden sm:flex ml-4">
+          {/* <Button variant="ghost" className="hidden sm:flex ml-4">
             Contact Us
-          </Button>
+          </Button> */}
         </div>
 
         {/* Desktop Navigation */}
@@ -93,7 +93,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col xl:flex-row items-center justify-center w-full px-4 sm:px-6 lg:px-8 xl:px-16 py-8 sm:py-12 lg:py-16 gap-8 lg:gap-12">
+      <main className="flex-1 flex flex-col xl:flex-row items-center justify-center w-full px-4 sm:px-6 lg:px-8 xl:px-16 py-8 sm:py-12 lg:py-16 gap-8 lg:gap-28">
         {/* Text Section */}
         <section className="flex-1 flex flex-col gap-4 sm:gap-6 text-center xl:text-left max-w-2xl xl:max-w-none">
           <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-tight text-gray-900">
@@ -152,7 +152,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
               }}
             />
             <Card
-              className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 bg-cover bg-center rounded-lg sm:rounded-xl"
+              className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 lg:min-w-72 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
                 backgroundImage:
                   "url('https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=400&q=80')",
@@ -163,7 +163,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
           {/* Second Row */}
           <div className="flex gap-3 sm:gap-4">
             <Card
-              className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 bg-cover bg-center rounded-lg sm:rounded-xl"
+              className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 lg:min-w-72 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
                 backgroundImage:
                   "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80')",

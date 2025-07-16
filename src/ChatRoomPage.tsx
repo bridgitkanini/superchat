@@ -58,7 +58,7 @@ export function ChatRoomPage({
 
   return (
     <div className="min-h-screen w-full bg-[#f7f9fa] p-2 sm:p-4 lg:p-6">
-      <div className="max-w-4xl mx-auto h-[calc(100vh-1rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]">
+      <div className="max-w-4xl mx-auto sm:mx-40 md:mx-60 lg:mx-96 h-[calc(100vh-1rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]">
         <Card className="h-full flex flex-col shadow-lg rounded-xl sm:rounded-2xl lg:rounded-3xl bg-white overflow-hidden">
           <Header auth={auth} />
 
@@ -107,7 +107,7 @@ export function ChatRoomPage({
 
 function Header({ auth }: { auth: Auth }) {
   return (
-    <header className="flex items-center justify-between px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b bg-white rounded-t-xl sm:rounded-t-2xl lg:rounded-t-3xl">
+    <header className="flex items-center justify-between px-3 sm:px-4 lg:px-6 py-3 sm:py-4 border-b bg-white rounded-t-xl sm:rounded-t-2xl lg:rounded-t-3xl sm:gap-40 md:gap-60 lg:gap-96">
       <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2">
         <span className="rounded-full bg-gradient-to-br from-[#ccf49c] to-[#c8def0] px-2 sm:px-3 py-1 text-green-900 shadow text-sm sm:text-base lg:text-lg">
           SuperChat
