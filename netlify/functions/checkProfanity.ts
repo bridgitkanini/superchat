@@ -1,14 +1,13 @@
 import { Handler } from '@netlify/functions';
 import { Filter } from 'bad-words';
-import admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 
 // Initialize Firebase Admin
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || '{}');
 
 if (admin.apps.length === 0) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: process.env.FIREBASE_DATABASE_URL
+    credential: admin.credential.cert(serviceAccount)
   });
 }
 
