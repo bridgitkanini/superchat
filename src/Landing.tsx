@@ -2,6 +2,7 @@ import { Button } from "./components/ui/button";
 import { Card } from "./components/ui/card";
 import { ArrowRight, Info, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { chatImage1, chatImage2, chatImage3, chatImage4 } from "./assets";
 
 export function Landing({ onSignIn }: { onSignIn: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -147,15 +148,13 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
             <Card
               className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80')",
+                backgroundImage: `url(${chatImage2})`,
               }}
             />
             <Card
               className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 lg:min-w-72 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=400&q=80')",
+                backgroundImage: `url(${chatImage4})`,
               }}
             />
           </div>
@@ -165,15 +164,13 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
             <Card
               className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 lg:min-w-72 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80')",
+                backgroundImage: `url(${chatImage3})`,
               }}
             />
             <Card
               className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80')",
+                backgroundImage: `url(${chatImage1})`,
               }}
             />
           </div>
