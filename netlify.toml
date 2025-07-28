@@ -5,7 +5,10 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["bad-words"]
+  external_node_modules = ["bad-words", "firebase-admin"]
+
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
 
 [[redirects]]
   from = "/api/*"
