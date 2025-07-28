@@ -57,8 +57,8 @@ export function ChatRoomPage({
   }, [messages]);
 
   return (
-    <div className="min-h-screen w-full bg-[#f7f9fa] p-2 sm:p-4 lg:p-6">
-      <div className="max-w-4xl mx-auto sm:mx-40 md:mx-60 lg:mx-96 h-[calc(100vh-1rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]">
+    <div className="min-h-screen w-screen bg-[#f7f9fa] p-2 sm:p-4 lg:p-6">
+      <div className="max-w-4xl mx-auto h-[calc(100vh-1rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)]">
         <Card className="h-full flex flex-col shadow-lg rounded-xl sm:rounded-2xl lg:rounded-3xl bg-white overflow-hidden">
           <Header auth={auth} />
 

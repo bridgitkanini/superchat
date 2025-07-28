@@ -93,9 +93,9 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col xl:flex-row items-center justify-center w-full px-4 sm:px-6 lg:px-8 xl:px-16 py-8 sm:py-12 lg:py-16 gap-8 lg:gap-28">
+      <main className="flex-1 flex flex-col lg:flex-row items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 gap-8">
         {/* Text Section */}
-        <section className="flex-1 flex flex-col gap-4 sm:gap-6 text-center xl:text-left max-w-2xl xl:max-w-none">
+        <section className="flex-1 flex flex-col gap-4 sm:gap-6 text-center lg:text-left max-w-2xl xl:max-w-none">
           <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-tight text-gray-900">
             Empower Connections
             <br />
@@ -109,7 +109,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-4 items-center xl:items-start">
+          <div className="flex flex-col sm:flex-row gap-4 mt-4 items-center lg:items-start">
             <Button
               className="bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900 font-bold shadow w-full sm:w-auto"
               onClick={onSignIn}
@@ -127,7 +127,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
           </div>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-6 sm:mt-8 justify-center xl:justify-start">
+          <div className="flex flex-wrap gap-2 mt-6 sm:mt-8 justify-center lg:justify-start">
             <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700">
               High-performance
             </span>
@@ -141,7 +141,7 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
         </section>
 
         {/* Image Grid Section */}
-        <section className="flex-1 flex flex-col gap-3 sm:gap-4 w-full max-w-2xl xl:max-w-none">
+        <section className="flex-1 flex flex-col gap-3 sm:gap-4 w-full max-w-2xl lg:max-w-none">
           {/* First Row */}
           <div className="flex gap-3 sm:gap-4">
             <Card
