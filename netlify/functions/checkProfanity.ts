@@ -5,6 +5,7 @@ import * as admin from 'firebase-admin';
 // Initialize Firebase Admin
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || '{}');
 
+// Initialize Firebase Admin if it hasn't been initialized yet
 if (admin.apps.length === 0) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -17,6 +18,7 @@ interface MessageData {
   text: string;
   uid: string;
   id?: string;
+  photoURL?: string;
 }
 
 export const handler: Handler = async (event) => {
@@ -29,7 +31,7 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const { text, uid, id } = JSON.parse(event.body || '{}') as MessageData;
+    const { text, uid, id, photoURL } = JSON.parse(event.body || '{}') as MessageData;
     
     if (!text || !uid || !id) {
       return {
@@ -43,13 +45,19 @@ export const handler: Handler = async (event) => {
     if (filter.isProfane(text)) {
       const cleaned = filter.clean(text);
       
-      // Update the message in Firestore
-      await db.collection('messages').doc(id).update({
+      // Add the message to Firestore
+      const messageData = {
         text: `🤐 I got banned for saying... ${cleaned}`,
-      });
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        uid,
+        photoURL: photoURL || null
+      };
+      
+      // Update the message in Firestore
+      await db.collection('messages').doc(id).update(messageData);
       
       // Add to banned collection
-      await db.collection('banned').doc(uid).set({});
+      await db.collection('banned').doc(uid).set({ timestamp: admin.firestore.FieldValue.serverTimestamp() });
       
       return {
         statusCode: 200,
