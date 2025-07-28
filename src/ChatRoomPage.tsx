@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { Button } from "./components/ui/button";
 import { Card } from "./components/ui/card";
 import { Input } from "./components/ui/input";
-import { LogOut, Send } from "lucide-react";
+import { LogOut, Send, Loader2 } from "lucide-react";
 import type { Auth } from "firebase/auth";
 import type { Firestore } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -13,6 +13,8 @@ import {
   limit,
   addDoc,
   serverTimestamp,
+  doc,
+  setDoc,
 } from "firebase/firestore";
 
 export function ChatRoomPage({
@@ -28,25 +30,59 @@ export function ChatRoomPage({
   const [messages] = useCollectionData(messagesQuery);
   const [formValue, setFormValue] = useState("");
 
+  const [isSending, setIsSending] = useState(false);
+
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth.currentUser || !formValue.trim()) return;
+    if (!auth.currentUser || !formValue.trim() || isSending) return;
 
+    setIsSending(true);
     const { uid, photoURL } = auth.currentUser;
-    await addDoc(messagesRef, {
-      text: formValue,
-      createdAt: serverTimestamp(),
-      uid,
-      photoURL,
-    });
-    setFormValue("");
 
-    // Scroll to bottom after message is sent
-    setTimeout(() => {
-      if (dummy.current) {
-        dummy.current.scrollIntoView({ behavior: "smooth" });
+    try {
+      // First, check for profanity using Netlify function
+      const response = await fetch("/.netlify/functions/checkProfanity", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: formValue,
+          uid,
+          id: `temp-${Date.now()}`, // Temporary ID for the message
+        }),
+      });
+
+      const result = await response.json();
+
+      // Add the message to Firestore
+      const messageData = {
+        text: result.moderated ? result.cleanedText : formValue,
+        createdAt: serverTimestamp(),
+        uid,
+        photoURL,
+      };
+
+      await addDoc(messagesRef, messageData);
+
+      // If the message was moderated, update the banned collection
+      if (result.moderated) {
+        await setDoc(doc(firestore, "banned", uid), {});
       }
-    }, 100);
+
+      setFormValue("");
+
+      // Scroll to bottom after message is sent
+      setTimeout(() => {
+        if (dummy.current) {
+          dummy.current.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   // Auto-scroll to bottom when new messages arrive
@@ -92,10 +128,14 @@ export function ChatRoomPage({
             <Button
               type="submit"
               size="sm"
-              className="bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900 font-bold shadow p-2 sm:p-3 rounded-lg"
-              disabled={!formValue.trim()}
+              className="bg-gradient-to-br from-[#ccf49c] to-[#c8def0] text-green-900 font-bold shadow p-2 sm:p-3 rounded-lg min-w-[40px] sm:min-w-[48px]"
+              disabled={!formValue.trim() || isSending}
             >
-              <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+              {isSending ? (
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+              )}
               <span className="sr-only">Send message</span>
             </Button>
           </form>
