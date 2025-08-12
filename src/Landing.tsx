@@ -146,13 +146,13 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
           {/* First Row */}
           <div className="flex gap-3 sm:gap-4">
             <Card
-              className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 bg-cover bg-center rounded-lg sm:rounded-xl"
+              className="h-32 sm:h-40 md:h-48 lg:h-56 w-[40%] sm:w-[35%] md:w-[35%] flex-shrink-0 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
                 backgroundImage: `url(${chatImage2})`,
               }}
             />
             <Card
-              className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 lg:min-w-72 bg-cover bg-center rounded-lg sm:rounded-xl"
+              className="h-32 sm:h-40 md:h-48 lg:h-56 w-[60%] sm:w-[65%] md:w-[65%] flex-shrink-0 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
                 backgroundImage: `url(${chatImage4})`,
               }}
@@ -162,13 +162,13 @@ export function Landing({ onSignIn }: { onSignIn: () => void }) {
           {/* Second Row */}
           <div className="flex gap-3 sm:gap-4">
             <Card
-              className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 lg:min-w-72 bg-cover bg-center rounded-lg sm:rounded-xl"
+              className="h-32 sm:h-40 md:h-48 lg:h-56 w-[60%] sm:w-[65%] md:w-[65%] flex-shrink-0 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
                 backgroundImage: `url(${chatImage3})`,
               }}
             />
             <Card
-              className="flex-1 h-32 sm:h-40 md:h-48 lg:h-56 bg-cover bg-center rounded-lg sm:rounded-xl"
+              className="h-32 sm:h-40 md:h-48 lg:h-56 w-[40%] sm:w-[35%] md:w-[35%] flex-shrink-0 bg-cover bg-center rounded-lg sm:rounded-xl"
               style={{
                 backgroundImage: `url(${chatImage1})`,
               }}

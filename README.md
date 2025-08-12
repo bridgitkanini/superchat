@@ -14,6 +14,22 @@ A modern, real-time chat application built with React, TypeScript, Vite, and Fir
 - **Sign Out**: Users can sign out at any time.
 - **Profanity Filtering**: A Firebase Cloud Function automatically checks new messages for profanity. If detected, the message is censored and the user is added to a "banned" list in Firestore.
 
+## 🔧 Technologies Used
+
+- **Frontend**:
+  - React 19
+  - TypeScript
+  - Vite
+  - TailwindCSS
+  - Radix UI Primitives
+  - Lucide Icons
+
+- **Backend**:
+  - Firebase Authentication
+  - Cloud Firestore
+  - Firebase Hosting
+  - Firebase Cloud Functions
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -77,29 +93,12 @@ superchat/
 └── vite.config.ts     # Vite configuration
 ```
 
-## 🔧 Technologies Used
-
-- **Frontend**:
-  - React 19
-  - TypeScript
-  - Vite
-  - TailwindCSS
-  - Radix UI Primitives
-  - Lucide Icons
-
-- **Backend**:
-  - Firebase Authentication
-  - Cloud Firestore
-  - Firebase Hosting
-  - Firebase Cloud Functions
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://opensource.org/license/mit) file for details.
 
 ---
-
-Built with ❤️ by [Your Name]
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
